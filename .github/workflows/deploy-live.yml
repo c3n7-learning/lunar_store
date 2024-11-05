@@ -35,14 +35,15 @@ jobs:
       - name: Install ccrypt
         run: sudo apt install ccrypt
 
-      - name: Decrypt kubeconfig
-        run: |
-          ccdecrypt -K ${{ secrets.CCRYPT_KEY }} devops/k8s/hodi-lke-kubeconfig.yaml.cpt
-          mkdir -p ~/.kube
-          mv devops/k8s/hodi-lke-kubeconfig.yaml ~/.kube/config
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Get overview of K8S
-        run: kubectl get all
+      - name: Install kubeconfig
+        run: |
+          doctl kubernetes cluster kubeconfig save ${{ secrets.K8S_CLUSTER_ID }}
+          kubectl get all
 
       - name: Decrypt secrets file
         run: |
@@ -56,4 +57,3 @@ jobs:
         run: |
           ls
           kubectl get all
-          rm -rf ~/.kube/config | true
