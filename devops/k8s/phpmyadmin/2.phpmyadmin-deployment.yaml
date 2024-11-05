@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin-deployment
+  namespace: devops-namespace
+  labels:
+    name: phpmyadmin-deployment
+    tier: devops
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      name: phpmyadmin-pod
+      tier: devops
+
+  template:
+    metadata:
+      name: phpmyadmin-pod
+      labels:
+        name: phpmyadmin-pod
+        tier: devops
+    spec:
+      containers:
+        - name: phpmyadmin-container
+          image: phpmyadmin/phpmyadmin:5
+          ports:
+            - containerPort: 80
+          # prettier-ignore
+          envFrom:
+          - secretRef:
+              name: phpmyadmin-secrets

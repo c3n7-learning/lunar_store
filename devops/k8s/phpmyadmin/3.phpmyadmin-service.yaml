@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin-service
+  namespace: devops-namespace
+  labels:
+    name: phpmyadmin-service
+    tier: devops
+
+spec:
+  # type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      # nodePort: 30800
+  selector:
+    name: phpmyadmin-pod
+    tier: devops
